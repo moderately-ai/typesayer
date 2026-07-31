@@ -1,6 +1,6 @@
 # Contributing
 
-Use Rust 1.94.1 or newer. Before opening a pull request, run formatting, workspace Clippy,
+Use Rust 1.88 or newer. Before opening a pull request, run formatting, workspace Clippy,
 `cargo nextest run --workspace --all-targets --all-features`, rustdoc with warnings denied, and
 `cargo deny check --all-features`.
 

@@ -68,8 +68,8 @@ test doubles use the same prediction API.
 
 ```toml
 [dependencies]
-typesayer = { version = "0.1.0", features = ["openai"] }
-modelplease = { version = "0.1.0", features = ["openai"] }
+typesayer = { version = "0.1.1", features = ["openai"] }
+modelplease = { version = "0.1.1", features = ["openai"] }
 reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"] }
 ```
 
@@ -125,5 +125,5 @@ format.
 
 ## Compatibility and license
 
-The synchronized crate family begins at 0.1.0 and requires Rust 1.94.1 because it depends on
-`modelplease`. Licensed under either MIT or Apache-2.0 at your option.
+The synchronized crate family requires Rust 1.88. Licensed under either MIT or Apache-2.0 at your
+option.
