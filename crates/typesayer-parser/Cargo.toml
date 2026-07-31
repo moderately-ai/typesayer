@@ -1,0 +1,41 @@
+[package]
+name = "typesayer-parser"
+description = "Incremental typed parser for streaming structured language-model output"
+readme = "README.md"
+documentation = "https://docs.rs/typesayer-parser"
+keywords = ["llm", "parser", "streaming", "structured-output"]
+categories = ["parser-implementations", "asynchronous"]
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[features]
+default = []
+test-utils = ["dep:modelplease", "dep:enumset", "dep:proptest"]
+
+[dependencies]
+typesayer-types.workspace = true
+regex.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+modelplease = { workspace = true, optional = true }
+enumset = { workspace = true, optional = true }
+proptest = { workspace = true, optional = true }
+
+[dev-dependencies]
+modelplease.workspace = true
+enumset.workspace = true
+proptest.workspace = true
+tokio.workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+
+[lints]
+workspace = true

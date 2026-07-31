@@ -1,0 +1,30 @@
+---
+source: crates/typesayer/src/adapter/chat.rs
+assertion_line: 1366
+expression: body
+---
+Your input fields are:
+1. `q` (str): Q
+
+Your output fields are:
+1. `assignment` (oneof[toolName: monthly | ranked_items]): the answer
+
+Variant shapes:
+  At `assignment` (discriminator: `toolName`):
+    - toolName == "monthly": Monthly spend
+        {toolName: enum[monthly], dimension: enum[category]}
+    - toolName == "ranked_items": Top N merchants
+        {toolName: enum[ranked_items], topN: int}
+
+All interactions will be structured in the following way, with the appropriate values filled in.
+
+[[ ## q ## ]]
+{q}
+
+[[ ## assignment ## ]]
+{assignment}        # note: a JSON object whose `toolName` field selects the variant — e.g. {"toolName": "monthly", ...} (see "Variant shapes" above for each arm's fields)
+
+[[ ## completed ## ]]
+
+In adhering to this structure, your objective is:
+Demo.

@@ -1,0 +1,85 @@
+[workspace]
+resolver = "3"
+members = [
+    "crates/typesayer",
+    "crates/typesayer-parser",
+    "crates/typesayer-types",
+]
+default-members = [
+    "crates/typesayer",
+    "crates/typesayer-parser",
+    "crates/typesayer-types",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.94.1"
+license = "MIT OR Apache-2.0"
+authors = [
+    "Thomas Santerre <opensource@moderately.ai>",
+    "Moderately AI Inc. <opensource@moderately.ai>",
+]
+repository = "https://github.com/moderately-ai/typesayer"
+homepage = "https://github.com/moderately-ai/typesayer"
+
+[workspace.dependencies]
+typesayer-types = { path = "crates/typesayer-types", version = "0.1.0" }
+typesayer-parser = { path = "crates/typesayer-parser", version = "0.1.0" }
+modelplease = { version = "0.1.0", default-features = false }
+parzen = "0.1.0"
+
+async-trait = "=0.1.89"
+enumset = { version = "=1.1.5", features = ["serde"] }
+futures = "=0.3.32"
+insta = { version = "=1.43.2", features = ["json"] }
+once_cell = "=1.21.4"
+proptest = "1.5"
+rand = "=0.9.3"
+reqwest = { version = "=0.12.28", default-features = false, features = ["json", "rustls-tls"] }
+regex = "=1.12.3"
+serde = { version = "=1.0.228", features = ["derive"] }
+serde_json = { version = "=1.0.149", features = ["arbitrary_precision"] }
+tempfile = "=3.27.0"
+thiserror = "=2.0.18"
+tokio = { version = "=1.50.0", features = ["fs", "io-std", "io-util", "macros", "rt-multi-thread", "signal", "sync", "time"] }
+tracing = "=0.1.44"
+
+[workspace.lints.rust]
+unsafe_code = "deny"
+
+[workspace.lints.clippy]
+all = { level = "deny", priority = -1 }
+pedantic = { level = "allow", priority = -1 }
+nursery = { level = "allow", priority = -1 }
+cargo = { level = "allow", priority = -1 }
+dbg_macro = "deny"
+print_stdout = "deny"
+print_stderr = "deny"
+unwrap_used = "allow"
+expect_used = "allow"
+panic = "allow"
+too_many_lines = "allow"
+too_many_arguments = "allow"
+module_name_repetitions = "allow"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+doc_markdown = "allow"
+cast_possible_truncation = "allow"
+cast_sign_loss = "allow"
+cast_precision_loss = "allow"
+cast_possible_wrap = "allow"
+cast_lossless = "allow"
+similar_names = "allow"
+struct_excessive_bools = "allow"
+type_complexity = "allow"
+result_large_err = "allow"
+multiple_crate_versions = "allow"
+future_not_send = "allow"
+
+[profile.dev]
+debug = "line-tables-only"
+split-debuginfo = "unpacked"
+
+[profile.dev.package."*"]
+opt-level = 1

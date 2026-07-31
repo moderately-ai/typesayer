@@ -1,0 +1,8 @@
+---
+source: crates/typesayer/src/adapter/chat.rs
+assertion_line: 1580
+expression: reminder
+---
+Respond with these output fields:
+[[ ## assignment ## ]] — a JSON object whose `kind` field selects the variant — e.g. {"kind": "x", ...} (see "Variant shapes" above for each arm's fields)
+Then end with [[ ## completed ## ]].

@@ -1,0 +1,30 @@
+---
+source: crates/typesayer/src/adapter/chat.rs
+assertion_line: 1348
+expression: body
+---
+Your input fields are:
+1. `q` (str): Q
+
+Your output fields are:
+1. `data` (anyof[str | int]): the answer
+
+Variant shapes:
+  At `data` (any-of; emit one value matching one of the shapes below — first match wins on parse):
+    - Shape 1: labeled
+        str
+    - Shape 2: numeric
+        int
+
+All interactions will be structured in the following way, with the appropriate values filled in.
+
+[[ ## q ## ]]
+{q}
+
+[[ ## data ## ]]
+{data}        # note: a JSON value matching any of the shapes listed under "Variant shapes" above (first match wins)
+
+[[ ## completed ## ]]
+
+In adhering to this structure, your objective is:
+Demo.

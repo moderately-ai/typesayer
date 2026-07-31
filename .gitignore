@@ -1,0 +1,7 @@
+/target/
+/tests/downstream/Cargo.lock
+/tests/downstream/target/
+**/*.rs.bk
+.DS_Store
+.idea/
+.vscode/

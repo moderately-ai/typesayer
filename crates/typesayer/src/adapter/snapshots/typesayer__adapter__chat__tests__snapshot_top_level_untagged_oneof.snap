@@ -1,0 +1,30 @@
+---
+source: crates/typesayer/src/adapter/chat.rs
+assertion_line: 1336
+expression: body
+---
+Your input fields are:
+1. `q` (str): Q
+
+Your output fields are:
+1. `result` (oneof[int | list[str]]): the answer
+
+Variant shapes:
+  At `result` (untagged; emit a JSON value matching exactly one of the shapes below):
+    - Shape 1: int arm
+        int
+    - Shape 2: list arm
+        list[str]
+
+All interactions will be structured in the following way, with the appropriate values filled in.
+
+[[ ## q ## ]]
+{q}
+
+[[ ## result ## ]]
+{result}        # note: a JSON value matching exactly one of the shapes listed under "Variant shapes" above
+
+[[ ## completed ## ]]
+
+In adhering to this structure, your objective is:
+Demo.

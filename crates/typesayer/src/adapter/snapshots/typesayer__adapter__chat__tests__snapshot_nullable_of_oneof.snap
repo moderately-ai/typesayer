@@ -1,0 +1,29 @@
+---
+source: crates/typesayer/src/adapter/chat.rs
+assertion_line: 1477
+expression: body
+---
+Your input fields are:
+1. `q` (str): Q
+
+Your output fields are:
+1. `maybe_tool` (optional[oneof[kind: only]]): the answer
+
+Variant shapes:
+  At `maybe_tool` (discriminator: `kind`):
+    - kind == "only": single tool
+        {kind: enum[only]}
+
+All interactions will be structured in the following way, with the appropriate values filled in.
+Fields whose type is `optional[...]` may be omitted entirely when not applicable — drop the marker; do not emit a literal `null` unless the schema explicitly accepts it.
+
+[[ ## q ## ]]
+{q}
+
+[[ ## maybe_tool ## ]]
+{maybe_tool}        # note: a JSON object whose `kind` field selects the variant — e.g. {"kind": "only", ...} (see "Variant shapes" above for each arm's fields), or null when the value is not applicable
+
+[[ ## completed ## ]]
+
+In adhering to this structure, your objective is:
+Demo.

@@ -1,0 +1,35 @@
+---
+source: crates/typesayer/src/adapter/chat.rs
+assertion_line: 1541
+expression: body
+---
+Your input fields are:
+1. `q` (str): Q
+
+Your output fields are:
+1. `root` (oneof[kind: outer_a | outer_b]): the answer
+
+Variant shapes:
+  At `root` (discriminator: `kind`):
+    - kind == "outer_a": outer with nested
+        {kind: enum[outer_a], nested: oneof[subkind: alpha | beta]}
+    - kind == "outer_b": outer plain
+        {kind: enum[outer_b]}
+  At `root[kind="outer_a"].nested` (discriminator: `subkind`):
+    - subkind == "alpha": inner a
+        {subkind: enum[alpha]}
+    - subkind == "beta": inner b
+        {subkind: enum[beta]}
+
+All interactions will be structured in the following way, with the appropriate values filled in.
+
+[[ ## q ## ]]
+{q}
+
+[[ ## root ## ]]
+{root}        # note: a JSON object whose `kind` field selects the variant — e.g. {"kind": "outer_a", ...} (see "Variant shapes" above for each arm's fields)
+
+[[ ## completed ## ]]
+
+In adhering to this structure, your objective is:
+Demo.

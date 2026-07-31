@@ -1,0 +1,155 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  license-headers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff
+        with:
+          go-version: "1.24"
+      - run: go install github.com/google/addlicense@v1.2.0
+      - run: scripts/license-headers.sh check
+
+  test:
+    name: test (Rust ${{ matrix.rust }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        rust: ["1.94.1", stable]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@4be7066ada62dd38de10e7b70166bc74ed198c30
+        with:
+          toolchain: ${{ matrix.rust }}
+      - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32
+        with:
+          cache-bin: false
+      - uses: taiki-e/install-action@3d7d7cd5ac7f994c1892ae0c06165095b9139094
+        with:
+          tool: nextest
+      - run: cargo nextest run --workspace --all-targets --all-features --locked
+      - name: Doctests
+        env:
+          RUSTDOCFLAGS: -D warnings
+        run: cargo test --doc --workspace --all-features --locked
+
+  crate-matrix:
+    name: ${{ matrix.lane }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - lane: types
+            command: cargo check -p typesayer-types --all-targets --locked
+          - lane: parser-default
+            command: cargo check -p typesayer-parser --all-targets --no-default-features --locked
+          - lane: parser-test-utils
+            command: cargo check -p typesayer-parser --all-targets --features test-utils --locked
+          - lane: typesayer-core
+            command: cargo check -p typesayer --all-targets --no-default-features --locked
+          - lane: typesayer-openai
+            command: cargo check -p typesayer --all-targets --features openai --locked
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@4be7066ada62dd38de10e7b70166bc74ed198c30
+        with:
+          toolchain: "1.94.1"
+      - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32
+        with:
+          cache-bin: false
+      - run: ${{ matrix.command }}
+
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@4be7066ada62dd38de10e7b70166bc74ed198c30
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32
+        with:
+          cache-bin: false
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+      - name: Documentation
+        env:
+          RUSTDOCFLAGS: -D warnings
+        run: cargo doc --workspace --no-deps --all-features --locked
+
+  supply-chain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: taiki-e/install-action@3d7d7cd5ac7f994c1892ae0c06165095b9139094
+        with:
+          tool: cargo-deny
+      - run: cargo deny --all-features check
+
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@4be7066ada62dd38de10e7b70166bc74ed198c30
+        with:
+          toolchain: stable
+      - name: Verify package artifacts in dependency order
+        shell: bash
+        run: |
+          set -euo pipefail
+          version=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[] | select(.name == "typesayer") | .version')
+          cargo publish --dry-run -p typesayer-types --locked
+          cargo publish --dry-run -p typesayer-parser --locked \
+            --config "patch.crates-io.typesayer-types.path='${GITHUB_WORKSPACE}/crates/typesayer-types'"
+          cargo publish --dry-run -p typesayer --locked \
+            --config "patch.crates-io.typesayer-types.path='${GITHUB_WORKSPACE}/crates/typesayer-types'" \
+            --config "patch.crates-io.typesayer-parser.path='${GITHUB_WORKSPACE}/crates/typesayer-parser'"
+          cargo package --list -p typesayer-types --locked > "$RUNNER_TEMP/typesayer-types.files"
+          cargo package --list -p typesayer-parser --locked > "$RUNNER_TEMP/typesayer-parser.files"
+          cargo package --list -p typesayer --locked > "$RUNNER_TEMP/typesayer.files"
+          cargo check --manifest-path "target/package/typesayer-types-$version/Cargo.toml"
+          cargo check --manifest-path "target/package/typesayer-parser-$version/Cargo.toml" --all-features \
+            --config "patch.crates-io.typesayer-types.path='${GITHUB_WORKSPACE}/target/package/typesayer-types-$version'"
+          cargo check --manifest-path "target/package/typesayer-$version/Cargo.toml" --all-features \
+            --config "patch.crates-io.typesayer-types.path='${GITHUB_WORKSPACE}/target/package/typesayer-types-$version'" \
+            --config "patch.crates-io.typesayer-parser.path='${GITHUB_WORKSPACE}/target/package/typesayer-parser-$version'"
+          cargo check --manifest-path tests/downstream/Cargo.toml \
+            --config "patch.crates-io.typesayer-types.path='${GITHUB_WORKSPACE}/target/package/typesayer-types-$version'" \
+            --config "patch.crates-io.typesayer-parser.path='${GITHUB_WORKSPACE}/target/package/typesayer-parser-$version'" \
+            --config "patch.crates-io.typesayer.path='${GITHUB_WORKSPACE}/target/package/typesayer-$version'"
+          mv "$RUNNER_TEMP"/typesayer*.files .
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: package-inventories
+          path: "*.files"

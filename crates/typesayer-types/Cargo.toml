@@ -1,0 +1,27 @@
+[package]
+name = "typesayer-types"
+description = "Field, signature, media, and error types for typed language-model prediction"
+readme = "README.md"
+documentation = "https://docs.rs/typesayer-types"
+keywords = ["llm", "schema", "structured-output", "types"]
+categories = ["data-structures"]
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[dependencies]
+modelplease.workspace = true
+enumset.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+
+[lints]
+workspace = true

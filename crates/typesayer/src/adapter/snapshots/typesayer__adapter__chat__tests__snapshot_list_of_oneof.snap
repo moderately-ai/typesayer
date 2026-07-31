@@ -1,0 +1,30 @@
+---
+source: crates/typesayer/src/adapter/chat.rs
+assertion_line: 1378
+expression: body
+---
+Your input fields are:
+1. `q` (str): Q
+
+Your output fields are:
+1. `results` (list[oneof[kind: a | b]]): the answer
+
+Variant shapes:
+  At `results[]` (discriminator: `kind`):
+    - kind == "a": tool a
+        {kind: enum[a]}
+    - kind == "b": tool b
+        {kind: enum[b]}
+
+All interactions will be structured in the following way, with the appropriate values filled in.
+
+[[ ## q ## ]]
+{q}
+
+[[ ## results ## ]]
+{results}        # note: a JSON array of oneof[kind: a | b], e.g. ["...", "..."] — not an object, not a code fence
+
+[[ ## completed ## ]]
+
+In adhering to this structure, your objective is:
+Demo.

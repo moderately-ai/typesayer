@@ -1,0 +1,12 @@
+[package]
+name = "typesayer-downstream-fixture"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+typesayer = { version = "=0.1.0", features = ["openai"] }
+typesayer-parser = { version = "=0.1.0", features = ["test-utils"] }
+typesayer-types = "=0.1.0"
+
+[workspace]

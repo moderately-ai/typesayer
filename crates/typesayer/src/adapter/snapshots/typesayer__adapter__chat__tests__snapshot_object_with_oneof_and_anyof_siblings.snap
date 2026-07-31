@@ -1,0 +1,33 @@
+---
+source: crates/typesayer/src/adapter/chat.rs
+assertion_line: 1480
+expression: body
+---
+Your input fields are:
+1. `q` (str): Q
+
+Your output fields are:
+1. `composite` ({a: oneof[kind: x], b: anyof[str | int]}): the answer
+
+Variant shapes:
+  At `composite.a` (discriminator: `kind`):
+    - kind == "x": a-only
+        {kind: enum[x]}
+  At `composite.b` (any-of; emit one value matching one of the shapes below — first match wins on parse):
+    - Shape 1: str
+        str
+    - Shape 2: int
+        int
+
+All interactions will be structured in the following way, with the appropriate values filled in.
+
+[[ ## q ## ]]
+{q}
+
+[[ ## composite ## ]]
+{composite}        # note: a JSON object matching {a: oneof[kind: x], b: anyof[str | int]} — e.g. {"a": ..., "b": ...} — not a code fence
+
+[[ ## completed ## ]]
+
+In adhering to this structure, your objective is:
+Demo.
