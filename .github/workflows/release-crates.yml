@@ -57,8 +57,13 @@ jobs:
         run: |
           set -euo pipefail
           version=${{ steps.version.outputs.version }}
+          cargo package --no-verify -p typesayer-types --locked
+          cargo package --no-verify -p typesayer-parser --locked \
+            --config "patch.crates-io.typesayer-types.path='${GITHUB_WORKSPACE}/crates/typesayer-types'"
+          cargo package --no-verify -p typesayer --locked \
+            --config "patch.crates-io.typesayer-types.path='${GITHUB_WORKSPACE}/crates/typesayer-types'" \
+            --config "patch.crates-io.typesayer-parser.path='${GITHUB_WORKSPACE}/crates/typesayer-parser'"
           for package in typesayer-types typesayer-parser typesayer; do
-            cargo package --no-verify -p "$package" --locked
             cargo package --list -p "$package" --locked > "$RUNNER_TEMP/$package-$version.files"
           done
           mv "$RUNNER_TEMP"/typesayer*.files .
