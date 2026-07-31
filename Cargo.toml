@@ -12,9 +12,9 @@ default-members = [
 ]
 
 [workspace.package]
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
-rust-version = "1.94.1"
+rust-version = "1.88"
 license = "MIT OR Apache-2.0"
 authors = [
     "Thomas Santerre <opensource@moderately.ai>",
@@ -24,10 +24,10 @@ repository = "https://github.com/moderately-ai/typesayer"
 homepage = "https://github.com/moderately-ai/typesayer"
 
 [workspace.dependencies]
-typesayer-types = { path = "crates/typesayer-types", version = "0.1.0" }
-typesayer-parser = { path = "crates/typesayer-parser", version = "0.1.0" }
-modelplease = { version = "0.1.0", default-features = false }
-parzen = "0.1.0"
+typesayer-types = { path = "crates/typesayer-types", version = "0.1.1" }
+typesayer-parser = { path = "crates/typesayer-parser", version = "0.1.1" }
+modelplease = { version = "0.1.1", default-features = false }
+parzen = "0.1.1"
 
 async-trait = "=0.1.89"
 enumset = { version = "=1.1.5", features = ["serde"] }

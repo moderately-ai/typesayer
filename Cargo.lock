@@ -744,9 +744,9 @@ dependencies = [
 
 [[package]]
 name = "modelplease"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a46fce634f02e484947e2b9a95cdc7047a11162e5f8ab8657bbc3b337233004c"
+checksum = "676a765d3c53b331a290be66fc6fc575d9fb2c17b45b9b3aebb332df7f5121d8"
 dependencies = [
  "async-trait",
  "base64",
@@ -830,9 +830,9 @@ dependencies = [
 
 [[package]]
 name = "parzen"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "42a993df78e4bf672ee7190ed50a7c0f797cc4d8db94437d2d75b189e71db9b0"
+checksum = "40e1dec7b2cbc5f251ca2fd0096d84762a67e1a7979f9c4bf714bff98cd89c2a"
 dependencies = [
  "rand 0.9.3",
  "serde",
@@ -1598,7 +1598,7 @@ checksum = "e421abadd41a4225275504ea4d6566923418b7f05506fbc9c0fe86ba7396114b"
 
 [[package]]
 name = "typesayer"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "async-trait",
  "enumset",
@@ -1623,7 +1623,7 @@ dependencies = [
 
 [[package]]
 name = "typesayer-parser"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "enumset",
  "modelplease",
@@ -1639,7 +1639,7 @@ dependencies = [
 
 [[package]]
 name = "typesayer-types"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "enumset",
  "modelplease",
